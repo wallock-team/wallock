@@ -1,0 +1,13 @@
+name: Validate commit
+
+run-name: Validating commit ${{ github.sha }} from ${{ github.actor }}
+
+on: [push]
+
+jobs:
+  Lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: pnpm run test
+      - run: pnpm run lint
