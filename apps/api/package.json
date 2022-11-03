@@ -72,7 +72,8 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@app/users(|/.*)$": "<rootDir>/libs/users/src/$1"
+      "^@app/users(|/.*)$": "<rootDir>/libs/users/src/$1",
+      "^@app/auth(|/.*)$": "<rootDir>/libs/auth/src/$1"
     }
   }
 }
