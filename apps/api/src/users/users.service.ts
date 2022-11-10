@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, OpenId, CreateUserDto } from '@wallock/schemas';
+import { User, OpenId, UserCreateDto } from '@wallock/schemas';
 import { UserAlreadyExistsError } from './errors';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class UsersService {
     private usersRepo: Repository<User>,
   ) {}
 
-  async createUser(dto: CreateUserDto) {
+  async createUser(dto: UserCreateDto) {
     const userInDb = await this.usersRepo.findOneBy({
       openId: dto.openId,
     });

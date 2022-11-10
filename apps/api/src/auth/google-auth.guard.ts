@@ -8,13 +8,13 @@ export class GoogleAuthGuard extends AuthGuard('google') {
     super();
   }
 
-  getAuthenticateOptions(context: ExecutionContext): IAuthModuleOptions<{}> {
+  getAuthenticateOptions(context: ExecutionContext): IAuthModuleOptions<null> {
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
 
     const successUrl = req.query.success_url;
     res.cookie('success_url', successUrl || this.envService.env.baseUrl);
 
-    return {};
+    return null;
   }
 }
