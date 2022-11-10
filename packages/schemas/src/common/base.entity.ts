@@ -5,28 +5,29 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  VersionColumn
-} from 'typeorm'
+  VersionColumn,
+} from 'typeorm';
 
 @Entity()
-export abstract class Base {
-  @PrimaryGeneratedColumn()
-  id: number
-
-  @Column(() => Meta)
-  meta: Meta
-}
-
-class Meta {
+export class Meta {
   @CreateDateColumn()
-  timeOfCreation: Date
+  timeOfCreation: Date;
 
   @UpdateDateColumn()
-  timeOfLastUpdate: Date
+  timeOfLastUpdate: Date;
 
   @DeleteDateColumn()
-  timeOfDeletion?: Date
+  timeOfDeletion?: Date;
 
   @VersionColumn()
-  version: number
+  version: number;
+}
+
+@Entity()
+export class Base {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column(() => Meta)
+  meta: Meta;
 }

@@ -1,26 +1,26 @@
-import { PassportStrategy } from '@nestjs/passport'
+import { PassportStrategy } from '@nestjs/passport';
 
-import { ExtractJwt, JwtFromRequestFunction, Strategy } from 'passport-jwt'
-import { Request } from 'express'
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Request } from 'express';
 
-import { User } from 'src/users'
-import { EnvService } from 'src/env'
-import { UsersService } from 'src/users'
-import { forwardRef, Inject } from '@nestjs/common'
+import { User } from '@wallock/schemas';
+import { EnvService } from 'src/env';
+import { forwardRef, Inject } from '@nestjs/common';
+import { UsersService } from 'src/users';
 
 function fromCookie(req: Request): string | null {
-  return req.cookies?.jwt
+  return req.cookies?.jwt;
 }
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(
     @Inject(forwardRef(() => EnvService))
     envService: EnvService,
-    private readonly userService: UsersService
+    private readonly userService: UsersService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([fromCookie]),
-      secretOrKey: envService.env.secrets.jwt
-    })
+      secretOrKey: envService.env.secrets.jwt,
+    });
   }
 
   async validate(jwt: any): Promise<User | false> {
@@ -28,17 +28,19 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       !jwt ||
       typeof jwt !== 'object' ||
       !jwt.sub ||
-      typeof jwt.sub !== 'number'
+      typeof jwt.sub !== 'string' ||
+      !jwt.iss ||
+      typeof jwt.iss !== 'string'
     ) {
-      return false
+      return false;
     }
 
-    const user = await this.userService.getUserById(jwt.sub)
+    const user = await this.userService.getUserByOpenId(jwt);
 
     if (!user) {
-      return false
+      return false;
     } else {
-      return user
+      return user;
     }
   }
 }

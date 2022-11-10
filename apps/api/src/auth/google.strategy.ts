@@ -1,23 +1,23 @@
-import { forwardRef, Inject } from '@nestjs/common'
-import { PassportStrategy } from '@nestjs/passport'
+import { forwardRef, Inject } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
 
-import { Request } from 'express'
+import { Request } from 'express';
 import {
   Profile,
   Strategy,
-  StrategyOptionsWithRequest
-} from 'passport-google-oauth20'
+  StrategyOptionsWithRequest,
+} from 'passport-google-oauth20';
 
-import { EnvService } from 'src/env'
-import { User } from 'src/users'
+import { EnvService } from 'src/env';
+import { User } from '@wallock/schemas';
 
-import { AuthService } from './auth.service'
+import { AuthService } from './auth.service';
 
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor(
     @Inject(forwardRef(() => EnvService))
     envService: EnvService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
   ) {
     const strategyOpts: StrategyOptionsWithRequest = {
       clientID: envService.env.oidc.google.id,
@@ -25,24 +25,24 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       scope: ['openid', 'profile'],
       callbackURL: `${envService.env.baseUrl}/login-with-google`,
       state: true,
-      passReqToCallback: true
-    }
+      passReqToCallback: true,
+    };
 
-    super(strategyOpts)
+    super(strategyOpts);
   }
 
   async validate(
     req: Request,
     _accessToken: string,
     _refreshToken: string,
-    profile: Profile
+    profile: Profile,
   ): Promise<User | false> {
     const { user, jwt } = await this.authService.loginOrSignUpFromGoogle(
-      profile
-    )
+      profile,
+    );
 
-    req.res.cookie('jwt', jwt, { httpOnly: true })
+    req.res.cookie('jwt', jwt, { httpOnly: true });
 
-    return user
+    return user;
   }
 }

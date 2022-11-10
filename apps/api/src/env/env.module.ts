@@ -7,6 +7,7 @@ import { EnvService, envValidation } from './env.service';
   imports: [
     ConfigModule.forRoot({
       validationSchema: envValidation,
+      envFilePath: './../../.env',
     }),
   ],
   providers: [EnvService],

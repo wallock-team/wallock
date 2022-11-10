@@ -1,15 +1,20 @@
-import { IsNotEmpty, IsOptional } from 'class-validator'
+import { IsDefined, IsNotEmpty, IsOptional } from 'class-validator';
+
+export class CreateOpenIdDto {
+  @IsNotEmpty()
+  iss: string;
+
+  @IsNotEmpty()
+  sub: string;
+}
 
 export class CreateUserDto {
-  @IsNotEmpty()
-  iss: string
-
-  @IsNotEmpty()
-  sub: string
+  @IsDefined()
+  openId: CreateOpenIdDto;
 
   @IsOptional()
-  firstName?: string
+  firstName?: string;
 
   @IsOptional()
-  lastName?: string
+  lastName?: string;
 }

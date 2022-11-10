@@ -1,8 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
+import { Public } from './common/public-url';
 
 @Controller()
 export class AppController {
   @Get()
+  @Public()
   greet() {
     return {
       message:

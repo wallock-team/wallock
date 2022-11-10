@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import Joi, * as joi from 'joi';
+import * as joi from 'joi';
 
 export const envValidation = joi.object({
   ENV: joi.string().valid('dev', 'prod').required(),
@@ -12,7 +12,7 @@ export const envValidation = joi.object({
     otherwise: joi.string().required(),
   }),
 
-  WEB_URL: Joi.when('ENV', {
+  WEB_URL: joi.when('ENV', {
     is: 'dev',
     then: joi.string().optional().default('localhost:3001'),
     otherwise: joi.string().required(),
