@@ -1,5 +1,6 @@
-import { Base } from '../common/base.entity';
 import { Column, Entity, Unique } from 'typeorm';
+
+import { Base } from 'common/base.entity.js';
 
 @Entity()
 @Unique('Unique Open ID', ['iss', 'sub'])

@@ -1,1 +1,2 @@
-export { User, CreateUserDto } from 'users/index.js';
+export { User } from './users/user.entity.js';
+export { CreateUserDto } from './users/create-user.dto.js';
