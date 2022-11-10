@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "name": "schemas",
+  "description": "Contains all the classes used to communicate between the frontend and the backend",
+  "author": "Minh Quang, Pham <quangpham.245@proton.me",
+  "version": "0.1.0",
+  "type": "commonjs",
+  "exports": {
+    ".": "./dist/index.js",
+    "./users": "./dist/users/index.js"
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "prebuild": "rimraf ./dist",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "rimraf": "^3.0.2",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "class-validator": "^0.13.2",
+    "typeorm": "^0.3.10"
+  }
+}
