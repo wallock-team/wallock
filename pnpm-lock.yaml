@@ -119,6 +119,7 @@ importers:
       '@types/node': 18.11.9
       '@types/react': 18.0.25
       '@types/react-dom': 18.0.8
+      '@wallock/schemas': workspace:schemas@*
       axios: ^1.1.3
       eslint: 8.27.0
       eslint-config-next: 13.0.2
@@ -137,6 +138,7 @@ importers:
       '@types/node': 18.11.9
       '@types/react': 18.0.25
       '@types/react-dom': 18.0.8
+      '@wallock/schemas': link:../../packages/schemas
       axios: 1.1.3
       eslint: 8.27.0
       eslint-config-next: 13.0.2_rmayb2veg2btbq6mbmnyivgasy

@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@wallock/schemas": "workspace:schemas@*",
     "@babel/core": "^7.20.2",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
