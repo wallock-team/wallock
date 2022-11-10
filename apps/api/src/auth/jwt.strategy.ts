@@ -35,7 +35,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       return false;
     }
 
-    const user = await this.userService.getUserByOpenId(jwt);
+    const user = await this.userService.getUserByOpenId({
+      iss: jwt.iss,
+      sub: jwt.sub,
+    });
 
     if (!user) {
       return false;

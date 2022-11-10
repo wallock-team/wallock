@@ -31,6 +31,7 @@ export class AuthService {
     }
 
     const jwtPayload = {
+      iss: user.openId.iss,
       sub: user.openId.sub,
     };
 

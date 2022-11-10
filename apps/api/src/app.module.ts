@@ -4,10 +4,12 @@ import { User } from '@wallock/schemas';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth';
 import { EnvModule, EnvService } from './env';
+import { UsersModule } from './users';
 
 @Module({
   imports: [
     AuthModule,
+    UsersModule,
     TypeOrmModule.forRootAsync({
       imports: [EnvModule],
       inject: [EnvService],
