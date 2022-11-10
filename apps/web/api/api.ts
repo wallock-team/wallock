@@ -1,35 +1,31 @@
-import axios from 'axios'
-import CategoriesApi from './categories-api'
-import TransactionsApi from './transactions-api'
+import axios, { Axios } from 'axios';
+import { GetServerSidePropsContext } from 'next';
+import { AuthApi } from './auth-api';
 
 export default class Api {
-  public static async fromServer(context: any) {
-    return new Api(context)
+  public static fromWebServer(context: GetServerSidePropsContext) {
+    return new Api(context);
   }
 
-  public static fromWeb() {
-    return new Api()
+  public static fromBrowser() {
+    return new Api();
   }
 
-  public constructor(private readonly context?: any) {
+  private readonly axios: Axios;
+  public readonly auth: AuthApi;
+
+  public constructor(context?: GetServerSidePropsContext) {
     const configuredAxios = axios.create({
-      baseURL: process.env.apiUrl,
-      withCredentials: true
-    })
+      baseURL: process.env.API_URL,
+      withCredentials: true,
+    });
 
-    if (this.context) {
-      configuredAxios.defaults.headers.get.Cookie = String(
-        context.req.headers.cookie
-      )
+    if (context) {
+      const clientCookie = context.req.headers.cookie;
+      configuredAxios.defaults.headers.Cookie = String(clientCookie);
     }
-    this.transactions = new TransactionsApi(configuredAxios)
-    this.categories = new CategoriesApi(configuredAxios)
-  }
 
-  public get loginWithGoogleUrl() {
-    return `${process.env.API_URL}/login-with-google?success_url=${process.env.WEB_URL}/transactions`
+    this.axios = configuredAxios;
+    this.auth = new AuthApi(this.axios);
   }
-
-  public readonly transactions: TransactionsApi
-  public readonly categories: CategoriesApi
 }
