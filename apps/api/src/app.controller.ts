@@ -1,12 +1,29 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  greet() {
+    return {
+      message:
+        'Welcome to Wallock API! This is the RESTful API for Wallock - a financial budgeting web application!',
+      git: 'https://github.com/wallock-team/wallock',
+      authors: [
+        {
+          name: 'Minh Quang, Pham',
+          email: 'quangpham.245@proton.me',
+          github: 'https://github.com/pmq24',
+        },
+        {
+          name: 'Minh Hien, Pham',
+          email: 'pmhien2703@gmail.com',
+          github: 'https://github.com/pmhien2703',
+        },
+        {
+          name: 'Vu Quoc Cuong, Pham',
+          github: 'https://github.com/Cuong15061999',
+        },
+      ],
+    };
   }
 }
