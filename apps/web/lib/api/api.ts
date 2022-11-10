@@ -1,6 +1,7 @@
 import axios, { Axios } from 'axios';
 import { GetServerSidePropsContext } from 'next';
 import { AuthApi } from './auth-api';
+import { WalletsApi } from './wallets-api';
 
 export default class Api {
   public static fromWebServer(context: GetServerSidePropsContext) {
@@ -13,6 +14,7 @@ export default class Api {
 
   private readonly axios: Axios;
   public readonly auth: AuthApi;
+  public readonly wallets: WalletsApi;
 
   public constructor(context?: GetServerSidePropsContext) {
     const configuredAxios = axios.create({
@@ -27,5 +29,6 @@ export default class Api {
 
     this.axios = configuredAxios;
     this.auth = new AuthApi(this.axios);
+    this.wallets = new WalletsApi(this.axios);
   }
 }
