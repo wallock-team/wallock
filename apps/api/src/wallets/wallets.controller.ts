@@ -20,11 +20,8 @@ export class WalletsController {
     return await this.walletsService.createWallet(req.user, dto);
   }
 
-  @Get()
-  async findAllWallets() {}
-
   @Get(':id')
-  async findWallet(
+  async findWalletWithId(
     @Param('id', ParseIntPipe) id: number,
     @Req() req: AuthRequest,
   ) {
