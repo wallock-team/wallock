@@ -1,15 +1,7 @@
 import { Column, Entity, Unique } from 'typeorm';
 
 import { Base } from '../common/base.entity.js';
-
-@Entity()
-export class OpenId {
-  @Column()
-  iss: string;
-
-  @Column()
-  sub: string;
-}
+import { OpenId } from './open-id.entity.js';
 
 @Entity()
 @Unique('Unique Open ID', ['openId.iss', 'openId.sub'])

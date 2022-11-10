@@ -1,16 +1,9 @@
 import { IsDefined, IsNotEmpty, IsOptional } from 'class-validator';
+import { OpenIdCreateDto } from './open-id-create.dto.js';
 
-export class CreateOpenIdDto {
-  @IsNotEmpty()
-  iss: string;
-
-  @IsNotEmpty()
-  sub: string;
-}
-
-export class CreateUserDto {
+export class UserCreateDto {
   @IsDefined()
-  openId: CreateOpenIdDto;
+  openId: OpenIdCreateDto;
 
   @IsOptional()
   firstName?: string;

@@ -1,27 +1,5 @@
-import {
-  CreateDateColumn,
-  Column,
-  DeleteDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  VersionColumn,
-} from 'typeorm';
-
-@Entity()
-export class Meta {
-  @CreateDateColumn()
-  timeOfCreation: Date;
-
-  @UpdateDateColumn()
-  timeOfLastUpdate: Date;
-
-  @DeleteDateColumn()
-  timeOfDeletion?: Date;
-
-  @VersionColumn()
-  version: number;
-}
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Meta } from './meta.entity.js';
 
 @Entity()
 export class Base {
