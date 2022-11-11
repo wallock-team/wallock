@@ -1,26 +1,25 @@
 import { Button, Container, Stack, TextField } from '@mui/material';
-import { Wallet } from '@wallock/schemas';
-import { WalletCreateDto } from '@wallock/schemas';
+import { WalletCreateDto, WalletCreateYup } from '@wallock/schemas';
 import { GetServerSideProps, NextPage } from 'next';
 import { CancelOrConfirmAppBar } from '../../components/common/cancel-or-confirm-app-bar';
 import Api from '../../lib/api/api';
 import { withAuthPage } from '../../lib/with-auth-page';
-import { FormikErrors, useFormik } from 'formik';
-import { validate } from 'class-validator';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 
 type Props = {
-  wallets: Wallet[];
+  existingWalletNames: string[];
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = withAuthPage(
   async function (ctx) {
     const api = Api.fromWebServer(ctx);
 
-    const wallets = await api.wallets.getWallets();
-
     return {
       props: {
-        wallets,
+        existingWalletNames: (await api.wallets.getWallets()).map(
+          (wallet) => wallet.name
+        ),
       },
     };
   }
@@ -28,20 +27,16 @@ export const getServerSideProps: GetServerSideProps<Props> = withAuthPage(
 
 const NewWallet: NextPage<Props> = function (props: Props) {
   const formik = useFormik<WalletCreateDto>({
-    initialValues: new WalletCreateDto(),
-    validate: async function (values) {
-      const errors = await validate(values);
-
-      const formikErrors: any = {};
-      errors.forEach((error) => {
-        if (!error.constraints) {
-          return;
-        }
-        formikErrors[error.property] = Object.values(error.constraints);
-      });
-
-      return formikErrors;
+    initialValues: {
+      name: '',
     },
+    validationSchema: WalletCreateYup.concat(
+      yup.object({
+        name: yup
+          .string()
+          .notOneOf(props.existingWalletNames, 'Name already exists'),
+      })
+    ),
     onSubmit: console.log,
   });
 
