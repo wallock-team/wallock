@@ -15,8 +15,8 @@ type Props = {
   title?: string;
   cancelIcon?: 'cancel' | 'back' | ReactNode;
   confirmIcon?: 'confirm' | ReactNode;
-  onCancel: () => void;
-  onConfirm: () => void;
+  onCancel?: () => void;
+  onConfirm?: () => void;
 };
 
 export function CancelOrConfirmAppBar(props: Props) {
