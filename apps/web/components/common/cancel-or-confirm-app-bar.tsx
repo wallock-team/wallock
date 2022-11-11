@@ -15,6 +15,8 @@ type Props = {
   title?: string;
   cancelIcon?: 'cancel' | 'back' | ReactNode;
   confirmIcon?: 'confirm' | ReactNode;
+  onCancel: () => void;
+  onConfirm: () => void;
 };
 
 export function CancelOrConfirmAppBar(props: Props) {
@@ -22,7 +24,7 @@ export function CancelOrConfirmAppBar(props: Props) {
     <AppBar position="sticky">
       <Container>
         <Toolbar>
-          <IconButton sx={{ mr: 2 }}>
+          <IconButton sx={{ mr: 2 }} onClick={props.onCancel}>
             {!props.cancelIcon || props.cancelIcon === 'cancel' ? (
               <CancelIcon />
             ) : props.cancelIcon === 'back' ? (
@@ -34,7 +36,7 @@ export function CancelOrConfirmAppBar(props: Props) {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             {props.title ?? ''}
           </Typography>
-          <IconButton>
+          <IconButton onClick={props.onConfirm}>
             {!props.confirmIcon || props.confirmIcon === 'confirm' ? (
               <ConfirmIcon />
             ) : (
