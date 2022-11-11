@@ -24,6 +24,10 @@ export class WalletsService {
     return await this.findWalletByName(user, dto.name);
   }
 
+  public async findWallets(user: User): Promise<Wallet[]> {
+    return await this.walletsRepo.findBy({ userId: user.id });
+  }
+
   public async findWalletById(user: User, id: number): Promise<Wallet | null> {
     const wallet = await this.walletsRepo.findOneBy({ id });
 
