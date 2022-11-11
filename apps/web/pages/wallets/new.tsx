@@ -1,4 +1,4 @@
-import { Button, Container, Stack, TextField } from '@mui/material';
+import { Container, Stack, TextField } from '@mui/material';
 import { WalletCreateDto, WalletCreateYup } from '@wallock/schemas';
 import { GetServerSideProps, NextPage } from 'next';
 import { CancelOrConfirmAppBar } from '../../components/common/cancel-or-confirm-app-bar';
@@ -6,6 +6,9 @@ import Api from '../../lib/api/api';
 import { withAuthPage } from '../../lib/with-auth-page';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { useApi } from '../../components/contexts/api-context';
+import { ErrorToast, SuccessToast } from '../../components/common/toast';
+import { ReactNode, useState } from 'react';
 
 type Props = {
   existingWalletNames: string[];
@@ -15,17 +18,20 @@ export const getServerSideProps: GetServerSideProps<Props> = withAuthPage(
   async function (ctx) {
     const api = Api.fromWebServer(ctx);
 
+    const wallets = await api.wallets.getWallets();
+
     return {
       props: {
-        existingWalletNames: (await api.wallets.getWallets()).map(
-          (wallet) => wallet.name
-        ),
+        existingWalletNames: wallets.map((wallet) => wallet.name),
       },
     };
   }
 );
 
 const NewWallet: NextPage<Props> = function (props: Props) {
+  const [toast, setToast] = useState<ReactNode>(null);
+  const api = useApi();
+
   const formik = useFormik<WalletCreateDto>({
     initialValues: {
       name: '',
@@ -37,12 +43,21 @@ const NewWallet: NextPage<Props> = function (props: Props) {
           .notOneOf(props.existingWalletNames, 'Name already exists'),
       })
     ),
-    onSubmit: console.log,
+    onSubmit: (formData) =>
+      api.wallets
+        .createWallet(formData)
+        .then((_wallet) =>
+          setToast(<SuccessToast message="Wallet created succesfully!" />)
+        )
+        .catch((_error) =>
+          setToast(<ErrorToast message="Oops... Try again later :(" />)
+        ),
   });
 
   return (
     <>
-      <CancelOrConfirmAppBar title="New Wallet" />
+      {toast}
+      <CancelOrConfirmAppBar title="New Wallet" onConfirm={formik.submitForm} />
       <Container maxWidth="md" sx={{ mt: 4 }}>
         <Stack>
           <TextField
@@ -51,7 +66,6 @@ const NewWallet: NextPage<Props> = function (props: Props) {
             error={!!(formik.touched.name && formik.errors.name)}
             helperText={formik.touched.name && formik.errors.name}
           />
-          <Button onClick={formik.submitForm}>Submit</Button>
         </Stack>
       </Container>
     </>
