@@ -1,5 +1,5 @@
 import { Wallet } from '@wallock/schemas';
-import axios, { Axios } from 'axios';
+import { Axios } from 'axios';
 
 export class WalletsApi {
   constructor(private readonly axios: Axios) {}
