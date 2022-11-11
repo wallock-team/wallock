@@ -9,4 +9,4 @@ export { OpenId } from './users/open-id.entity.js';
 export { OpenIdCreateDto } from './users/open-id-create.dto.js';
 
 export { Wallet } from './wallets/wallet.entity.js';
-export { WalletCreateDto } from './wallets/wallet-create.dto.js';
+export { WalletCreateDto, WalletCreateYup } from './wallets/wallet-create.dto.js';
