@@ -1,14 +1,13 @@
 import { Container, Stack, TextField } from '@mui/material';
-import { WalletCreateDto, WalletCreateYup } from '@wallock/schemas';
+import { WalletCreateDto } from '@wallock/schemas';
 import { GetServerSideProps, NextPage } from 'next';
 import { CancelOrConfirmAppBar } from '../../components/common/cancel-or-confirm-app-bar';
 import Api from '../../lib/api/api';
 import { withAuthPage } from '../../lib/with-auth-page';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
 import { useApi } from '../../components/contexts/api-context';
 import { ErrorToast, SuccessToast } from '../../components/common/toast';
 import { ReactNode, useState } from 'react';
+import { useClassForm } from '../../lib/hooks/use-class-form';
 
 type Props = {
   existingWalletNames: string[];
@@ -32,17 +31,17 @@ const NewWallet: NextPage<Props> = function (props: Props) {
   const [toast, setToast] = useState<ReactNode>(null);
   const api = useApi();
 
-  const formik = useFormik<WalletCreateDto>({
+  const formik = useClassForm(WalletCreateDto, {
     initialValues: {
       name: '',
     },
-    validationSchema: WalletCreateYup.concat(
-      yup.object({
-        name: yup
-          .string()
-          .notOneOf(props.existingWalletNames, 'Name already exists'),
-      })
-    ),
+    validate: (values) => {
+      return {
+        name: props.existingWalletNames.includes(values.name)
+          ? `Wallet with name ${values.name} already exists`
+          : undefined,
+      };
+    },
     onSubmit: (formData) =>
       api.wallets
         .createWallet(formData)
