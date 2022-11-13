@@ -50,7 +50,9 @@ export async function validateClass<T extends object>(
   const fErrors: ValidationErrors<T> = {};
 
   cvErrors.forEach((error) => {
-    fErrors[error.property as keyof T] = Object.values(error.constraints!)[0];
+    const errorMessage = Object.values(error.constraints!)[0];
+    fErrors[error.property as keyof T] =
+      errorMessage[0].toUpperCase() + errorMessage.substring(1);
   });
 
   return fErrors;

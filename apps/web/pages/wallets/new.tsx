@@ -1,4 +1,4 @@
-import { Container, Stack, TextField } from '@mui/material';
+import { Container, Stack, TextField, Typography } from '@mui/material';
 import { WalletCreateDto } from '@wallock/schemas';
 import { GetServerSideProps, NextPage } from 'next';
 import { CancelOrConfirmAppBar } from '../../components/common/cancel-or-confirm-app-bar';
@@ -29,6 +29,7 @@ export const getServerSideProps: GetServerSideProps<Props> = withAuthPage(
 
 const NewWallet: NextPage<Props> = function (props: Props) {
   const [toast, setToast] = useState<ReactNode>(null);
+  const [creating, setCreating] = useState(false);
   const api = useApi();
 
   const formik = useClassForm(WalletCreateDto, {
@@ -36,21 +37,18 @@ const NewWallet: NextPage<Props> = function (props: Props) {
       name: '',
     },
     validate: (values) => {
-      return {
-        name: props.existingWalletNames.includes(values.name)
-          ? `Wallet with name ${values.name} already exists`
-          : undefined,
-      };
+      const result: { [key in keyof typeof values]?: string } = {};
+
+      if (props.existingWalletNames.includes(values.name)) {
+        result.name = `Wallet with name '${values.name}' already exists`;
+      }
+      return result;
     },
-    onSubmit: (formData) =>
-      api.wallets
-        .createWallet(formData)
-        .then((_wallet) =>
-          setToast(<SuccessToast message="Wallet created succesfully!" />)
-        )
-        .catch((_error) =>
-          setToast(<ErrorToast message="Oops... Try again later :(" />)
-        ),
+    onSubmit: async function (formData) {
+      setCreating(true);
+      await api.wallets.createWallet(formData);
+      setCreating(false);
+    },
   });
 
   return (
@@ -58,6 +56,7 @@ const NewWallet: NextPage<Props> = function (props: Props) {
       {toast}
       <CancelOrConfirmAppBar title="New Wallet" onConfirm={formik.submitForm} />
       <Container maxWidth="md" sx={{ mt: 4 }}>
+        <Typography>{creating ? 'Creating...' : ''}</Typography>
         <Stack>
           <TextField
             label="Name"
