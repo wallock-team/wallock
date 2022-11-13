@@ -5,6 +5,7 @@ import { EnvService } from './env';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
 import { JwtAuthGuard } from './auth';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -36,6 +37,7 @@ async function bootstrap() {
     .use(cookieMiddleware)
     .use(sessionMiddleware)
     .useGlobalGuards(globalAuthGuard)
+    .useGlobalPipes(new ValidationPipe())
     .enableCors(corsSettings);
 
   await app.listen(3000);
