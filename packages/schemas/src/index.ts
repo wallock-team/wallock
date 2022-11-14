@@ -14,3 +14,6 @@ export { WalletCreateDto, WalletCreateYup } from './wallets/wallet-create.dto.js
 export { Category } from './categories/category.entity.js';
 export { CategoryCreateDto } from './categories/category-create.dto.js';
 export { type CategoryType, CategoryTypeValues } from './categories/category-type.js';
+
+export { Transaction } from './transactions/transaction.entity.js';
+export { TransactionCreateDto } from './transactions/transaction-create.dto.js';
