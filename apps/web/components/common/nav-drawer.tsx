@@ -1,6 +1,7 @@
 import { Drawer, List, ListItemButton, Paper, Tooltip } from '@mui/material';
 import { default as WalletsIcon } from '@mui/icons-material/AccountBalanceWallet';
 import { default as TransactionsIcon } from '@mui/icons-material/LocalAtm';
+import { default as CategoriesIcon } from '@mui/icons-material/Category';
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { startCase } from 'lodash';
@@ -9,6 +10,10 @@ const navEntries: readonly NavEntry[] = [
   {
     url: 'transactions',
     icon: <TransactionsIcon />,
+  },
+  {
+    url: 'categories',
+    icon: <CategoriesIcon />,
   },
   {
     url: 'wallets',
