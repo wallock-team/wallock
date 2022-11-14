@@ -1,6 +1,5 @@
 import { IsIn, IsNotEmpty } from 'class-validator';
-import { type } from 'os';
-import { CategoryType, CategoryTypeValues } from './category-type';
+import { CategoryType, CategoryTypeValues } from './category-type.js';
 
 export class CategoryCreateDto {
   @IsNotEmpty()
