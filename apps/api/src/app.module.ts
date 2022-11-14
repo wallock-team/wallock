@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User, Wallet, Category } from '@wallock/schemas';
+import { User, Wallet, Category, Transaction } from '@wallock/schemas';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth';
 import { CategoriesModule } from './categories';
 import { EnvModule, EnvService } from './env';
+import { TransactionsModule } from './transactions';
 import { UsersModule } from './users';
 import { WalletsModule } from './wallets';
 
@@ -14,6 +15,7 @@ import { WalletsModule } from './wallets';
     UsersModule,
     WalletsModule,
     CategoriesModule,
+    TransactionsModule,
     TypeOrmModule.forRootAsync({
       imports: [EnvModule],
       inject: [EnvService],
@@ -23,7 +25,7 @@ import { WalletsModule } from './wallets';
             type: 'better-sqlite3',
             database: ':memory:',
             synchronize: true,
-            entities: [User, Wallet, Category],
+            entities: [User, Wallet, Category, Transaction],
           };
         }
       },

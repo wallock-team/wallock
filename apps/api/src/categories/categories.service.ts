@@ -41,10 +41,7 @@ export class CategoriesService {
     return await this.categoriesRepo.findBy({ userId: user.id });
   }
 
-  public async findCategoryById(
-    user: User,
-    id: number,
-  ): Promise<Category | null> {
+  public async findCategoryById(user: User, id: number): Promise<Category> {
     const category = await this.categoriesRepo.findOneBy({ id });
 
     if (!category) {

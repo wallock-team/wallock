@@ -7,6 +7,9 @@ export class TransactionCreateDto {
   @IsOptional()
   note?: string;
 
+  @IsOptional()
+  time?: Date;
+
   @IsPositive()
   categoryId: number;
 
