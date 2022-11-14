@@ -30,7 +30,7 @@ export function useClassForm<T extends SimpleClass<T>>(
 type SimpleClass<T> = Record<keyof T, PrimitiveType>;
 type PrimitiveType = number | string | boolean | null | undefined;
 
-type ValidationErrors<T> = {
+export type ValidationErrors<T> = {
   [key in keyof T]?: string;
 };
 
