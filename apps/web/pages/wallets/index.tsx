@@ -1,9 +1,19 @@
-import { AppBar, Container, Toolbar, Typography } from '@mui/material';
+import {
+  AppBar,
+  Button,
+  Container,
+  List,
+  ListItem,
+  ListItemText,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import { GetServerSideProps, NextPage } from 'next';
 import NavDrawer from '../../components/common/nav-drawer';
 import { withAuthPage } from '../../lib/with-auth-page';
 import { Wallet } from '@wallock/schemas';
 import Api from '../../lib/api/api';
+import Link from 'next/link';
 
 type Props = {
   wallets: Wallet[];
@@ -25,17 +35,26 @@ const Wallets: NextPage<Props> = function (props) {
   return (
     <>
       <NavDrawer current="wallets" />
-      <Container maxWidth="md">
-        <AppBar>
+      <AppBar>
+        <Container maxWidth="md">
           <Toolbar>
-            <Container maxWidth="md">
-              <Typography variant="h6">My Wallets</Typography>
-              {props.wallets.map((wallet) => (
-                <h1 key={wallet.id}>{wallet.name}</h1>
-              ))}
-            </Container>
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>
+              My Wallets
+            </Typography>
+            <Link href="/wallets/new">
+              <Button variant="contained">New wallet</Button>
+            </Link>
           </Toolbar>
-        </AppBar>
+        </Container>
+      </AppBar>
+      <Container maxWidth="md" sx={{ mt: 8 }}>
+        <List>
+          {props.wallets.map((wallet) => (
+            <ListItem key={wallet.id}>
+              <ListItemText primary={wallet.name} />
+            </ListItem>
+          ))}
+        </List>
       </Container>
     </>
   );
