@@ -8,6 +8,7 @@ import { useApi } from '../../components/contexts/api-context';
 import { ErrorToast, SuccessToast } from '../../components/common/toast';
 import { ReactNode, useState } from 'react';
 import { useClassForm } from '../../lib/hooks/use-class-form';
+import { useRouter } from 'next/router';
 
 type Props = {
   existingWalletNames: string[];
@@ -28,6 +29,7 @@ export const getServerSideProps: GetServerSideProps<Props> = withAuthPage(
 );
 
 const NewWallet: NextPage<Props> = function (props: Props) {
+  const router = useRouter();
   const [toast, setToast] = useState<ReactNode>(null);
   const [isCreating, setCreating] = useState(false);
   const api = useApi();
@@ -49,6 +51,7 @@ const NewWallet: NextPage<Props> = function (props: Props) {
       try {
         await api.wallets.createWallet(formData);
         setToast(<SuccessToast message="Created wallet successfully!" />);
+        router.push('/wallets');
       } catch (e) {
         setToast(<ErrorToast message="Oops, try again later... :(" />);
       }
