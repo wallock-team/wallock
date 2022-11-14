@@ -4,6 +4,7 @@ import {
   IconButton,
   Toolbar,
   Typography,
+  CircularProgress,
 } from '@mui/material';
 
 import { default as CancelIcon } from '@mui/icons-material/Clear';
@@ -13,10 +14,15 @@ import { ReactNode } from 'react';
 
 type Props = {
   title?: string;
-  cancelIcon?: 'cancel' | 'back' | ReactNode;
-  confirmIcon?: 'confirm' | ReactNode;
-  onCancel?: () => void;
-  onConfirm?: () => void;
+  cancel?: {
+    icon?: 'cancel' | 'back' | ReactNode;
+    onClick?: () => void;
+  };
+  confirm?: {
+    icon?: 'cancel' | 'back' | ReactNode;
+    onClick?: () => void;
+    disabled?: boolean;
+  };
 };
 
 export function CancelOrConfirmAppBar(props: Props) {
@@ -24,23 +30,28 @@ export function CancelOrConfirmAppBar(props: Props) {
     <AppBar position="sticky">
       <Container>
         <Toolbar>
-          <IconButton sx={{ mr: 2 }} onClick={props.onCancel}>
-            {!props.cancelIcon || props.cancelIcon === 'cancel' ? (
+          <IconButton sx={{ mr: 2 }} onClick={props.cancel?.onClick}>
+            {!props.cancel?.icon || props.cancel.icon === 'cancel' ? (
               <CancelIcon />
-            ) : props.cancelIcon === 'back' ? (
+            ) : props.cancel.icon === 'back' ? (
               <BackIcon />
             ) : (
-              props.cancelIcon
+              props.cancel.icon
             )}
           </IconButton>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             {props.title ?? ''}
           </Typography>
-          <IconButton onClick={props.onConfirm}>
-            {!props.confirmIcon || props.confirmIcon === 'confirm' ? (
+          <IconButton
+            onClick={props.confirm?.onClick}
+            disabled={props.confirm?.disabled}
+          >
+            {props.confirm?.disabled ? (
+              <CircularProgress />
+            ) : !props.confirm?.icon || props.confirm.icon === 'confirm' ? (
               <ConfirmIcon />
             ) : (
-              props.cancelIcon
+              props.cancel?.icon
             )}
           </IconButton>
         </Toolbar>

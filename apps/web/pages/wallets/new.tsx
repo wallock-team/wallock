@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps<Props> = withAuthPage(
 
 const NewWallet: NextPage<Props> = function (props: Props) {
   const [toast, setToast] = useState<ReactNode>(null);
-  const [creating, setCreating] = useState(false);
+  const [isCreating, setCreating] = useState(false);
   const api = useApi();
 
   const formik = useClassForm(WalletCreateDto, {
@@ -46,7 +46,12 @@ const NewWallet: NextPage<Props> = function (props: Props) {
     },
     onSubmit: async function (formData) {
       setCreating(true);
-      await api.wallets.createWallet(formData);
+      try {
+        await api.wallets.createWallet(formData);
+        setToast(<SuccessToast message="Created wallet successfully!" />);
+      } catch (e) {
+        setToast(<ErrorToast message="Oops, try again later... :(" />);
+      }
       setCreating(false);
     },
   });
@@ -54,9 +59,11 @@ const NewWallet: NextPage<Props> = function (props: Props) {
   return (
     <>
       {toast}
-      <CancelOrConfirmAppBar title="New Wallet" onConfirm={formik.submitForm} />
+      <CancelOrConfirmAppBar
+        title="New Wallet"
+        confirm={{ onClick: formik.submitForm, disabled: isCreating }}
+      />
       <Container maxWidth="md" sx={{ mt: 4 }}>
-        <Typography>{creating ? 'Creating...' : ''}</Typography>
         <Stack>
           <TextField
             label="Name"
