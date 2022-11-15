@@ -2,6 +2,7 @@ import axios, { Axios } from 'axios';
 import { GetServerSidePropsContext } from 'next';
 import { AuthApi } from './auth-api';
 import { CategoriesApi } from './categories-api';
+import { TransactionsApi } from './transactions-api';
 import { WalletsApi } from './wallets-api';
 
 export default class Api {
@@ -17,6 +18,7 @@ export default class Api {
   public readonly auth: AuthApi;
   public readonly wallets: WalletsApi;
   public readonly categories: CategoriesApi;
+  public readonly transactions: TransactionsApi;
 
   public constructor(context?: GetServerSidePropsContext) {
     const configuredAxios = axios.create({
@@ -33,5 +35,6 @@ export default class Api {
     this.auth = new AuthApi(this.axios);
     this.wallets = new WalletsApi(this.axios);
     this.categories = new CategoriesApi(this.axios);
+    this.transactions = new TransactionsApi(this.axios);
   }
 }

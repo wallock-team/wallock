@@ -1,30 +1,45 @@
 import {
   AppBar,
+  Button,
   Container,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   Toolbar,
+  Typography,
 } from '@mui/material';
 import { Transaction, Wallet } from '@wallock/schemas';
 import { GetServerSideProps, NextPage } from 'next';
+import Link from 'next/link';
 import NavDrawer from '../../components/common/nav-drawer';
 import Api from '../../lib/api/api';
 import { withAuthPage } from '../../lib/with-auth-page';
 
 type Props = {
-  wallets: Wallet[];
   transactions: Transaction[];
+  totalBalance: number;
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = withAuthPage(
   async function (ctx) {
     const api = Api.fromWebServer(ctx);
+    const transactions = await api.transactions.getTransactions();
 
     return {
       props: {
-        wallets: await api.wallets.getWallets(),
+        transactions,
+        totalBalance: transactions.reduce(function (
+          totalBalance: number,
+          transaction: Transaction
+        ) {
+          const amount =
+            transaction.category.type === 'income'
+              ? transaction.amount
+              : -transaction.amount;
+          return totalBalance + amount;
+        },
+        0),
       },
     };
   }
@@ -38,14 +53,10 @@ const Transactions: NextPage<Props> = function (props) {
         <AppBar>
           <Container maxWidth="md">
             <Toolbar>
-              <FormControl>
-                <InputLabel>Age</InputLabel>
-                <Select>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-              </FormControl>
+              <Typography sx={{ flexGrow: 1 }}>{props.totalBalance}</Typography>
+              <Link href='/transactions/new'>
+              <Button variant="contained">New transaction</Button>
+              </Link>
             </Toolbar>
           </Container>
         </AppBar>

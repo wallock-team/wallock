@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Get,
   Param,
   ParseIntPipe,
@@ -27,7 +28,8 @@ export class TransactionsController {
   @Get()
   async findTransactions(
     @Req() req: AuthRequest,
-    @Query('wallet-id', ParseIntPipe) walletId?: number,
+    @Query('wallet-id', new DefaultValuePipe(0), ParseIntPipe)
+    walletId?: number,
   ) {
     const findOptions = {
       ...(walletId ? { walletId } : {}),

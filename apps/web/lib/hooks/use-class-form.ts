@@ -27,8 +27,10 @@ export function useClassForm<T extends SimpleClass<T>>(
  * Primitive types are `string`, `number`, `boolean`, `null`, `undefined`,
  * while non-primitive types are `object`, `array` and `symbol`
  */
-type SimpleClass<T> = Record<keyof T, PrimitiveType>;
-type PrimitiveType = number | string | boolean | null | undefined;
+type SimpleClass<T> = {
+  [key in keyof T]?: PrimitiveType;
+};
+type PrimitiveType = number | string | boolean | null | undefined | Date;
 
 export type ValidationErrors<T> = {
   [key in keyof T]?: string;
