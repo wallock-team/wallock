@@ -7,6 +7,7 @@ import {
 } from './errors';
 import { CategoriesService } from '../categories';
 import { WalletsService } from '../wallets';
+import { isEmpty } from 'lodash';
 
 export class TransactionsService {
   constructor(
@@ -56,4 +57,35 @@ export class TransactionsService {
 
     return transaction;
   }
+
+  public async findTransactions(
+    user: User,
+    findOptions: FindTransactionsOptions,
+  ) {
+    if (!findOptions || isEmpty(findOptions)) {
+      return await this.findAllTransactions(user);
+    } else {
+      return await this.findTransactionsByWalletId(user, findOptions.walletId);
+    }
+  }
+
+  private async findAllTransactions(user: User) {
+    return await this.transactionsRepo.findBy({
+      wallet: {
+        userId: user.id,
+      },
+    });
+  }
+
+  private async findTransactionsByWalletId(user: User, walletId: number) {
+    const wallet = await this.walletsService.findWalletById(user, walletId);
+
+    return await this.transactionsRepo.findBy({
+      wallet: wallet,
+    });
+  }
 }
+
+type FindTransactionsOptions = {
+  walletId?: number;
+};

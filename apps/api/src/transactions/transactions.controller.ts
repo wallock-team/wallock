@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Req,
 } from '@nestjs/common';
 import { TransactionCreateDto } from '@wallock/schemas';
@@ -13,14 +14,29 @@ import { TransactionsService } from './transactions.service';
 
 @Controller('transactions')
 export class TransactionsController {
-  constructor(private readonly categoriesService: TransactionsService) {}
+  constructor(private readonly transactionsService: TransactionsService) {}
 
   @Post()
   async createTransaction(
     @Req() req: AuthRequest,
     @Body() dto: TransactionCreateDto,
   ) {
-    return await this.categoriesService.createTransaction(req.user, dto);
+    return await this.transactionsService.createTransaction(req.user, dto);
+  }
+
+  @Get()
+  async findTransactions(
+    @Req() req: AuthRequest,
+    @Query('wallet-id', ParseIntPipe) walletId?: number,
+  ) {
+    const findOptions = {
+      ...(walletId ? { walletId } : {}),
+    };
+
+    return await this.transactionsService.findTransactions(
+      req.user,
+      findOptions,
+    );
   }
 
   @Get(':id')
@@ -28,6 +44,6 @@ export class TransactionsController {
     @Param('id', ParseIntPipe) id: number,
     @Req() req: AuthRequest,
   ) {
-    return await this.categoriesService.findTransactionById(req.user, id);
+    return await this.transactionsService.findTransactionById(req.user, id);
   }
 }
