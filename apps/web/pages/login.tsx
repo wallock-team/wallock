@@ -4,9 +4,12 @@ import { Box, Button, Container, Divider, TextField } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import logoSvg from 'public/branding/logo.svg';
 import { useApi } from '../components/contexts/api-context';
+import { useRouter } from 'next/router';
 
 const Login: NextPage = function () {
+  const router = useRouter();
   const api = useApi();
+
   return (
     <>
       <Container maxWidth="sm" sx={{ mt: '10vh' }}>
@@ -43,7 +46,10 @@ const Login: NextPage = function () {
   );
 
   function redirectToGoogleLogin() {
-    window.location.href = api.auth.getGoogleLoginUrl();
+    const successUrl = router.query.success_url;
+    window.location.href = api.auth.getGoogleLoginUrl(
+      typeof successUrl === 'string' ? successUrl : undefined
+    );
   }
 };
 

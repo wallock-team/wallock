@@ -2,7 +2,6 @@ import axios, { AxiosError } from 'axios';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
-  GetServerSidePropsResult,
   PreviewData,
 } from 'next';
 import { ParsedUrlQuery } from 'querystring';
@@ -16,7 +15,7 @@ export function withAuthPage<
     if (!(await isAuthenticated(ctx))) {
       return {
         redirect: {
-          destination: '/login',
+          destination: `/login?success_url=${ctx.resolvedUrl}`,
           permanent: false,
         },
       };
