@@ -1,4 +1,5 @@
 import { Container, MenuItem, Stack, TextField } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
 import { Wallet, Category, TransactionCreateDto } from '@wallock/schemas';
 import { GetServerSideProps, NextPage } from 'next';
 import { CancelOrConfirmAppBar } from '../../components/common/cancel-or-confirm-app-bar';
@@ -82,6 +83,20 @@ const NewTransaction: NextPage<Props> = function (props) {
               </MenuItem>
             ))}
           </TextField>
+          <DatePicker
+            label="Time"
+            value={form.values.time}
+            onChange={(value) =>
+              value && form.setFieldValue('time', Date.parse(value))
+            }
+            renderInput={(params) => <TextField {...params} name="time" />}
+          />
+          <TextField
+            label="Note"
+            {...form.getFieldProps('note')}
+            error={!!(form.touched.note && form.errors.note)}
+            helperText={form.touched.note && form.errors.note}
+          />
         </Stack>
       </Container>
     </>
