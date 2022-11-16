@@ -6,6 +6,8 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { CssBaseline } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -14,8 +16,10 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>Wallock</title>
         <link rel="icon" href="public/favicon/favicon.ico" />
       </Head>
-      <CssBaseline />
-      <Component {...pageProps} />
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </LocalizationProvider>
     </>
   );
 }
