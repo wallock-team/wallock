@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
   Req,
 } from '@nestjs/common';
@@ -26,7 +26,7 @@ export class TransactionsController {
     return await this.transactionsService.createTransaction(req.user, dto);
   }
 
-  @Put()
+  @Patch()
   async updateTransaction(
     @Req() req: AuthRequest,
     @Body() dto: TransactionUpdateDto
