@@ -7,7 +7,7 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { WalletCreateDto } from '@wallock/schemas';
+import { WalletCreateDto, WalletUpdateDto } from '@wallock/schemas';
 import { AuthRequest } from 'src/common/auth-request';
 import { WalletsService } from './wallets.service';
 
@@ -18,6 +18,11 @@ export class WalletsController {
   @Post()
   async createWallet(@Req() req: AuthRequest, @Body() dto: WalletCreateDto) {
     return await this.walletsService.createWallet(req.user, dto);
+  }
+
+  @Post()
+  async updateWallet(@Req() req: AuthRequest, @Body() dto: WalletUpdateDto) {
+    return await this.walletsService.updateWallet(req.user, dto);
   }
 
   @Get()

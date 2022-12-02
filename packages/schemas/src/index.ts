@@ -10,6 +10,7 @@ export { OpenIdCreateDto } from './users/open-id-create.dto.js';
 
 export { Wallet } from './wallets/wallet.entity.js';
 export { WalletCreateDto, WalletCreateYup } from './wallets/wallet-create.dto.js';
+export { WalletUpdateDto } from './wallets/wallet-update.dto.js';
 
 export { Category } from './categories/category.entity.js';
 export { CategoryCreateDto } from './categories/category-create.dto.js';
