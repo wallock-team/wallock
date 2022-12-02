@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
   Req,
 } from '@nestjs/common';
 import { WalletCreateDto, WalletUpdateDto } from '@wallock/schemas';
@@ -20,7 +21,7 @@ export class WalletsController {
     return await this.walletsService.createWallet(req.user, dto);
   }
 
-  @Post()
+  @Put()
   async updateWallet(@Req() req: AuthRequest, @Body() dto: WalletUpdateDto) {
     return await this.walletsService.updateWallet(req.user, dto);
   }

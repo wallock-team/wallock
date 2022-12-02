@@ -85,7 +85,7 @@ const NewTransaction: NextPage<Props> = function (props) {
           </TextField>
           <DatePicker
             label="Time"
-            value={form.values.time}
+            value={form.values.time?.toString()}
             onChange={(value) =>
               value && form.setFieldValue('time', Date.parse(value))
             }
