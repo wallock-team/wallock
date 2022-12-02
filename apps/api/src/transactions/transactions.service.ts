@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, Transaction, TransactionCreateDto } from '@wallock/schemas';
+import { User, Transaction, TransactionCreateDto, TransactionUpdateDto } from '@wallock/schemas';
 import {
   TransactionDoesntBelongToUserError,
   TransactionDoesntExistError,
@@ -39,6 +39,18 @@ export class TransactionsService {
       user,
       insertResult.identifiers.at(0).id,
     );
+  }
+
+  public async updateTransaction(user: User, dto: TransactionUpdateDto) { 
+    const transaction = await this.transactionsRepo.findOneBy({ id: dto.id });
+    if (!transaction) {
+      throw new TransactionDoesntExistError(dto.id);
+    }
+    if (transaction.wallet.userId !== user.id) {
+      throw new TransactionDoesntBelongToUserError(dto.id);
+    }
+    await this.transactionsRepo.update(dto.id, dto);
+    return await this.transactionsRepo.findOneBy({ id: dto.id });
   }
 
   public async findTransactionById(

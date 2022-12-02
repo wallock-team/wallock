@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Req,
 } from '@nestjs/common';
@@ -20,7 +21,7 @@ export class WalletsController {
     return await this.walletsService.createWallet(req.user, dto);
   }
 
-  @Post()
+  @Patch()
   async updateWallet(@Req() req: AuthRequest, @Body() dto: WalletUpdateDto) {
     return await this.walletsService.updateWallet(req.user, dto);
   }

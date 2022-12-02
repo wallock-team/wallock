@@ -18,3 +18,4 @@ export { type CategoryType, CategoryTypeValues } from './categories/category-typ
 
 export { Transaction } from './transactions/transaction.entity.js';
 export { TransactionCreateDto } from './transactions/transaction-create.dto.js';
+export { TransactionUpdateDto } from './transactions/transaction-update.dto.js'

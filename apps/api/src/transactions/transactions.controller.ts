@@ -5,11 +5,12 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   Req,
 } from '@nestjs/common';
-import { TransactionCreateDto } from '@wallock/schemas';
+import { TransactionCreateDto, TransactionUpdateDto } from '@wallock/schemas';
 import { AuthRequest } from 'src/common/auth-request';
 import { TransactionsService } from './transactions.service';
 
@@ -23,6 +24,14 @@ export class TransactionsController {
     @Body() dto: TransactionCreateDto,
   ) {
     return await this.transactionsService.createTransaction(req.user, dto);
+  }
+
+  @Patch()
+  async updateTransaction(
+    @Req() req: AuthRequest,
+    @Body() dto: TransactionUpdateDto
+  ) {
+    return await this.transactionsService.updateTransaction(req.user, dto);
   }
 
   @Get()
