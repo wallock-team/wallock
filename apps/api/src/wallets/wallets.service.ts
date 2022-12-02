@@ -1,6 +1,11 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, Wallet, WalletCreateDto, WalletUpdateDto } from '@wallock/schemas';
+import {
+  User,
+  Wallet,
+  WalletCreateDto,
+  WalletUpdateDto,
+} from '@wallock/schemas';
 import {
   WalletDoesntBelongToUserError,
   WalletDoesntExistError,
@@ -25,15 +30,15 @@ export class WalletsService {
   }
 
   public async updateWallet(user: User, dto: WalletUpdateDto) {
-    const walletId = dto.id;
-    const walletExist = await this.walletsRepo.findOneBy({ id: walletId });
+    const walletExist = await this.walletsRepo.findOneBy({ id: dto.id });
     if (!walletExist) {
-      throw new WalletDoesntExistError(walletId);
+      throw new WalletDoesntExistError(dto.id);
     }
     if (walletExist.userId !== user.id) {
-      throw new WalletDoesntBelongToUserError(walletId);
+      throw new WalletDoesntBelongToUserError(dto.id);
     }
-    return await this.walletsRepo.update( dto.id, {...dto} );
+    await this.walletsRepo.update(dto.id, dto);
+    return this.walletsRepo.findOneBy({ id: dto.id });
   }
 
   public async findWallets(user: User): Promise<Wallet[]> {
