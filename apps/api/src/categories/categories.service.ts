@@ -4,6 +4,7 @@ import {
   User,
   Category,
   CategoryCreateDto,
+  CategoryUpdateDto,
   type CategoryType,
 } from '@wallock/schemas';
 import {
@@ -34,6 +35,24 @@ export class CategoriesService {
 
     await this.categoriesRepo.insert({ ...dto, userId: user.id });
 
+    return await this.findCategoryByNameAndType(user, dto.name, dto.type);
+  }
+
+  public async updateCategory(user: User, dto: CategoryUpdateDto) {
+    const category = await this.categoriesRepo.findOneBy({ id: dto.id });
+    if (!category) {
+      throw new CategoryDoesntExistError(dto.id);
+    }
+    if (category.userId !== user.id) {
+      throw new CategoryDoesntBelongToUserError(dto.id);
+    }
+    const categoryWithNameAndType = !!(await this.findCategoryByNameAndType(user, dto.name, dto.type));
+    if (categoryWithNameAndType) {
+      throw new CategoryNameAndTypeAlreadyExistsError(dto.name, dto.type);
+    }
+    await this.categoriesRepo.update(dto.id, {
+      name: dto.name
+    });
     return await this.findCategoryByNameAndType(user, dto.name, dto.type);
   }
 
