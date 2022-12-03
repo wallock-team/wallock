@@ -11,4 +11,8 @@ export class TransactionsApi {
   async getTransactions() {
     return (await this.axios.get<Transaction[]>('/transactions')).data;
   }
+
+  async getTransactionById(id: number) {
+    return (await this.axios.get<Transaction>(`/transactions/${id}`)).data;
+  }
 }
