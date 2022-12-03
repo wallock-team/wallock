@@ -1,11 +1,23 @@
-import { Container, MenuItem, Stack, TextField } from '@mui/material';
+import {
+  Container,
+  MenuItem,
+  Stack,
+  TextField as MuiTextField,
+} from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { Wallet, Category, TransactionCreateDto } from '@wallock/schemas';
+import { Form, Formik } from 'formik';
 import { GetServerSideProps, NextPage } from 'next';
 import { CancelOrConfirmAppBar } from '../../components/common/cancel-or-confirm-app-bar';
 import Api from '../../lib/api/api';
-import { useClassForm } from '../../lib/hooks/use-class-form';
 import { withAuthPage } from '../../lib/with-auth-page';
+import * as y from 'yup';
+import { useRouter } from 'next/router';
+import TextField from '../../components/common/text-field';
+import Select from '../../components/common/select';
+import DateTimeField from '../../components/common/date-time-field';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 type Props = {
   wallets: Wallet[];
@@ -27,79 +39,81 @@ export const getServerSideProps: GetServerSideProps<Props> = withAuthPage(
 
 const NewTransaction: NextPage<Props> = function (props) {
   const api = Api.fromBrowser();
-
-  const form = useClassForm(TransactionCreateDto, {
-    initialValues: {
-      amount: 0,
-      categoryId: 0,
-      walletId: 0,
-      note: '',
-      time: new Date(),
-    },
-    validate: function (values) {
-      return {};
-    },
-    onSubmit: async function (values) {
-      await api.transactions.createTransaction(values);
-    },
-  });
+  const router = useRouter();
+  const [isCreating, setCreating] = useState(false);
 
   return (
-    <>
-      <CancelOrConfirmAppBar title="New transaction" />
-      <Container maxWidth="md" sx={{ mt: 4 }}>
-        <Stack gap={4}>
-          <TextField
-            type="number"
-            label="Amount"
-            {...form.getFieldProps('amount')}
-            error={!!(form.touched.amount && form.errors.amount)}
-            helperText={form.touched.amount && form.errors.amount}
-          />
-          <TextField
-            select
-            label="Category"
-            {...form.getFieldProps('categoryId')}
-            error={!!(form.touched.categoryId && form.errors.categoryId)}
-            helperText={form.touched.categoryId && form.errors.categoryId}
-          >
-            {props.categories.map((category) => (
-              <MenuItem key={category.id} value={category.id}>
-                {category.name}
-              </MenuItem>
-            ))}
-          </TextField>
+    <Formik<TransactionCreateDto>
+      initialValues={{
+        amount: 0,
+        categoryId: 0,
+        walletId: 0,
+        time: new Date(),
+      }}
+      validationSchema={y.object({
+        amount: y.number().positive().required(),
+        categoryId: y
+          .number()
+          .oneOf(
+            props.categories.map((c) => c.id),
+            'You must select a category'
+          )
+          .required(),
+        walletId: y
+          .number()
+          .oneOf(
+            props.wallets.map((w) => w.id),
+            'You must select a wallet'
+          )
+          .required(),
+      })}
+      onSubmit={async (value) => {
+        setCreating(true);
+        try {
+          await api.transactions.createTransaction(value);
+          toast.info('Created transaction successfully');
+          setCreating(false);
+          router.push('/transactions');
+        } catch (err) {
+          toast.error('Unexpected error');
+        }
+      }}
+    >
+      <Form>
+        <CancelOrConfirmAppBar
+          title="New transaction"
+          cancel={{ onClick: () => router.push('/transactions') }}
+          confirm={{ type: 'submit' }}
+        />
+        <Container maxWidth="md" sx={{ mt: 4 }}>
+          <Stack gap={4}>
+            <TextField name="amount" type="number" label="Amount" />
 
-          <TextField
-            select
-            label="Wallet"
-            {...form.getFieldProps('walletId')}
-            error={!!(form.touched.walletId && form.errors.walletId)}
-            helperText={form.touched.walletId && form.errors.walletId}
-          >
-            {props.wallets.map((wallet) => (
-              <MenuItem key={wallet.id} value={wallet.id}>
-                {wallet.name}
-              </MenuItem>
-            ))}
-          </TextField>
-          <DatePicker
-            label="Time"
-            value={form.values.time?.toString()}
-            onChange={(value) =>
-              value && form.setFieldValue('time', Date.parse(value))
-            }
-            renderInput={(params) => <TextField {...params} name="time" />}
-          />
-          <TextField
-            label="Note"
-            {...form.getFieldProps('note')}
-            error={!!(form.touched.note && form.errors.note)}
-            helperText={form.touched.note && form.errors.note}
-          />
-        </Stack>
-      </Container>
-    </>
+            <Select
+              label="Category"
+              name="categoryId"
+              options={props.categories.map((c) => ({
+                value: c.id,
+                label: c.name,
+              }))}
+            />
+
+            <Select
+              label="Wallet"
+              name="walletId"
+              options={props.wallets.map((c) => ({
+                value: c.id,
+                label: c.name,
+              }))}
+            />
+
+            <DateTimeField name="time" label="Time" />
+
+            <TextField label="Note" name="note" />
+          </Stack>
+        </Container>
+      </Form>
+    </Formik>
   );
 };
 

@@ -5,7 +5,7 @@ export class TransactionsApi {
   constructor(private readonly axios: Axios) {}
 
   async createTransaction(dto: TransactionCreateDto) {
-    return (await this.axios.post<Transaction>('/transactions')).data;
+    return (await this.axios.post<Transaction>('/transactions', dto)).data;
   }
 
   async getTransactions() {
