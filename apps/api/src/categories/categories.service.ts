@@ -33,7 +33,7 @@ export class CategoriesService {
       throw new CategoryNameAndTypeAlreadyExistsError(dto.name, dto.type);
     }
 
-    await this.categoriesRepo.insert({ ...dto, userId: user.id });
+    await this.categoriesRepo.insert({ ...dto, user });
 
     return await this.findCategoryByNameAndType(user, dto.name, dto.type);
   }
@@ -46,14 +46,18 @@ export class CategoriesService {
     if (category.userId !== user.id) {
       throw new CategoryDoesntBelongToUserError(dto.id);
     }
-    const categoryWithNameAndType = !!(await this.findCategoryByNameAndType(user, category.name, category.type));
+    const categoryWithNameAndType = !!(await this.findCategoryByNameAndType(
+      user,
+      category.name,
+      category.type,
+    ));
     if (categoryWithNameAndType) {
-      throw new CategoryNameAndTypeAlreadyExistsError(dto.name, dto.type);
+      throw new CategoryNameAndTypeAlreadyExistsError(dto.name, category.type);
     }
     await this.categoriesRepo.update(dto.id, {
-      name: dto.name
+      name: dto.name,
     });
-    return await this.findCategoryByNameAndType(user, dto.name, dto.type);
+    return await this.findCategoryByNameAndType(user, dto.name, category.type);
   }
 
   public async findCategories(user: User): Promise<Category[]> {

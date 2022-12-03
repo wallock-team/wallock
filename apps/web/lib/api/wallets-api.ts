@@ -1,4 +1,4 @@
-import { Wallet, WalletCreateDto } from '@wallock/schemas';
+import { Wallet, WalletCreateDto, WalletUpdateDto } from '@wallock/schemas';
 import { Axios } from 'axios';
 
 export class WalletsApi {
@@ -6,6 +6,10 @@ export class WalletsApi {
 
   async createWallet(dto: WalletCreateDto) {
     return (await this.axios.post<Wallet>('/wallets', dto)).data;
+  }
+
+  async updateWallet(dto: WalletUpdateDto) {
+    return (await this.axios.patch<Wallet>('/wallets', dto)).data;
   }
 
   async getWallets() {

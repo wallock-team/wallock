@@ -5,6 +5,7 @@ import {
   Toolbar,
   Typography,
   CircularProgress,
+  ButtonProps,
 } from '@mui/material';
 
 import { default as CancelIcon } from '@mui/icons-material/Clear';
@@ -17,12 +18,12 @@ type Props = {
   cancel?: {
     icon?: 'cancel' | 'back' | ReactNode;
     onClick?: () => void;
-  };
+  } & ButtonProps;
   confirm?: {
     icon?: 'cancel' | 'back' | ReactNode;
     onClick?: () => void;
     disabled?: boolean;
-  };
+  } & ButtonProps;
 };
 
 export function CancelOrConfirmAppBar(props: Props) {
@@ -30,7 +31,11 @@ export function CancelOrConfirmAppBar(props: Props) {
     <AppBar position="sticky">
       <Container>
         <Toolbar>
-          <IconButton sx={{ mr: 2 }} onClick={props.cancel?.onClick}>
+          <IconButton
+            sx={{ mr: 2 }}
+            {...props.cancel}
+            onClick={props.cancel?.onClick}
+          >
             {!props.cancel?.icon || props.cancel.icon === 'cancel' ? (
               <CancelIcon />
             ) : props.cancel.icon === 'back' ? (
@@ -43,6 +48,7 @@ export function CancelOrConfirmAppBar(props: Props) {
             {props.title ?? ''}
           </Typography>
           <IconButton
+            {...props.confirm}
             onClick={props.confirm?.onClick}
             disabled={props.confirm?.disabled}
           >
