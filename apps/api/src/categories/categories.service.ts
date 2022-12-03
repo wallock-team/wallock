@@ -46,7 +46,7 @@ export class CategoriesService {
     if (category.userId !== user.id) {
       throw new CategoryDoesntBelongToUserError(dto.id);
     }
-    const categoryWithNameAndType = !!(await this.findCategoryByNameAndType(user, dto.name, dto.type));
+    const categoryWithNameAndType = !!(await this.findCategoryByNameAndType(user, category.name, category.type));
     if (categoryWithNameAndType) {
       throw new CategoryNameAndTypeAlreadyExistsError(dto.name, dto.type);
     }
