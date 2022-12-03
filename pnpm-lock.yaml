@@ -139,7 +139,6 @@ importers:
       react-dom: 18.2.0
       react-toastify: ^9.1.1
       typescript: 4.8.4
-      web: workspace:^0.1.0
       yup: ^0.32.11
     dependencies:
       '@babel/core': 7.20.2
@@ -167,7 +166,6 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-toastify: 9.1.1_biqbaboplfbrettd7655fr4n2y
       typescript: 4.8.4
-      web: 'link:'
       yup: 0.32.11
     devDependencies:
       '@types/lodash': 4.14.188
