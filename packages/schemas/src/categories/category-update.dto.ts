@@ -7,7 +7,4 @@ export class CategoryUpdateDto {
 
   @IsNotEmpty()
   name: string;
-
-  @IsIn(CategoryTypeValues)
-  type: CategoryType;
 }
