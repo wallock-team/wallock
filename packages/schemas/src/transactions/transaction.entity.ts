@@ -14,8 +14,14 @@ export class Transaction extends Base {
   @Column()
   time: Date;
 
+  @Column()
+  categoryId: number;
+
   @ManyToOne(() => Category)
   category: Category;
+
+  @Column()
+  walletId: number;
 
   @ManyToOne(() => Wallet)
   wallet: Wallet;

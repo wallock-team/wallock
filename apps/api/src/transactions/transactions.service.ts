@@ -26,17 +26,14 @@ export class TransactionsService {
     user: User,
     dto: TransactionCreateDto,
   ): Promise<Transaction> {
-    const category = await this.categoriesService.findCategoryById(
-      user,
-      dto.categoryId,
-    );
+    // Check ìf categories exists or doesn't belong to user
+    await this.categoriesService.findCategoryById(user, dto.categoryId);
 
-    const wallet = await this.walletsService.findWalletById(user, dto.walletId);
+    // Check ìf wallet exists or doesn't belong to user
+    await this.walletsService.findWalletById(user, dto.walletId);
 
     const insertResult = await this.transactionsRepo.insert({
       ...dto,
-      category,
-      wallet,
       time: dto.time ?? new Date(),
     });
 
@@ -56,8 +53,11 @@ export class TransactionsService {
     }
     await this.transactionsRepo.update(dto.id, {
       ...omit(dto, 'categoryId', 'walletId'),
-      category: await this.categoriesService.findCategoryById(user, dto.categoryId),
-      wallet: await this.walletsService.findWalletById(user, dto.walletId)
+      category: await this.categoriesService.findCategoryById(
+        user,
+        dto.categoryId,
+      ),
+      wallet: await this.walletsService.findWalletById(user, dto.walletId),
     });
     return await this.transactionsRepo.findOneBy({ id: dto.id });
   }
@@ -66,7 +66,13 @@ export class TransactionsService {
     user: User,
     id: number,
   ): Promise<Transaction> {
-    const transaction = await this.transactionsRepo.findOneBy({ id });
+    const transaction = await this.transactionsRepo.findOne({
+      where: { id },
+      relations: {
+        category: true,
+        wallet: true,
+      },
+    });
 
     if (!transaction) {
       throw new TransactionDoesntExistError(id);
@@ -91,9 +97,14 @@ export class TransactionsService {
   }
 
   private async findAllTransactions(user: User) {
-    return await this.transactionsRepo.findBy({
-      wallet: {
-        userId: user.id,
+    return await this.transactionsRepo.find({
+      where: {
+        wallet: {
+          userId: user.id,
+        },
+      },
+      relations: {
+        category: true,
       },
     });
   }
