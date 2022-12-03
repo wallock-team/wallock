@@ -13,6 +13,7 @@ import {
 import { CategoriesService } from '../categories';
 import { WalletsService } from '../wallets';
 import { isEmpty, omit } from 'lodash';
+import { time } from 'console';
 
 export class TransactionsService {
   constructor(
@@ -90,7 +91,9 @@ export class TransactionsService {
     findOptions: FindTransactionsOptions,
   ) {
     if (!findOptions || isEmpty(findOptions)) {
-      return await this.findAllTransactions(user);
+      return (await this.findAllTransactions(user)).sort(
+        (t1, t2) => +t2.time - +t1.time,
+      );
     } else {
       return await this.findTransactionsByWalletId(user, findOptions.walletId);
     }

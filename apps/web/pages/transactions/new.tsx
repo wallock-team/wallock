@@ -18,6 +18,7 @@ import Select from '../../components/common/select';
 import DateTimeField from '../../components/common/date-time-field';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import ScreenLocker from '../../components/common/screen-locker';
 
 type Props = {
   wallets: Wallet[];
@@ -49,6 +50,7 @@ const NewTransaction: NextPage<Props> = function (props) {
         categoryId: 0,
         walletId: 0,
         time: new Date(),
+        note: '',
       }}
       validationSchema={y.object({
         amount: y.number().positive().required(),
@@ -80,6 +82,7 @@ const NewTransaction: NextPage<Props> = function (props) {
       }}
     >
       <Form>
+        <ScreenLocker lock={isCreating} />
         <CancelOrConfirmAppBar
           title="New transaction"
           cancel={{ onClick: () => router.push('/transactions') }}
