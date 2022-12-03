@@ -8,6 +8,8 @@ import '@fontsource/roboto/700.css';
 import { CssBaseline } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -16,6 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>Wallock</title>
         <link rel="icon" href="public/favicon/favicon.ico" />
       </Head>
+      <ToastContainer />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <CssBaseline />
         <Component {...pageProps} />
