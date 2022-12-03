@@ -15,6 +15,7 @@ export { WalletUpdateDto } from './wallets/wallet-update.dto.js';
 export { Category } from './categories/category.entity.js';
 export { CategoryCreateDto } from './categories/category-create.dto.js';
 export { type CategoryType, CategoryTypeValues } from './categories/category-type.js';
+export { CategoryUpdateDto } from './categories/category-update.dto.js'
 
 export { Transaction } from './transactions/transaction.entity.js';
 export { TransactionCreateDto } from './transactions/transaction-create.dto.js';
