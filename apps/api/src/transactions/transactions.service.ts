@@ -51,8 +51,8 @@ export class TransactionsService {
     }
     await this.transactionsRepo.update(dto.id, {
       ...omit(dto, 'categoryId', 'walletId'),
-      category: await this.categoriesService.findCategoryById(user, dto.id),
-      wallet: await this.walletsService.findWalletById(user, dto.id)
+      category: await this.categoriesService.findCategoryById(user, dto.categoryId),
+      wallet: await this.walletsService.findWalletById(user, dto.walletId)
     });
     return await this.transactionsRepo.findOneBy({ id: dto.id });
   }
