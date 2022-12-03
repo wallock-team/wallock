@@ -7,7 +7,7 @@ import {
 } from './errors';
 import { CategoriesService } from '../categories';
 import { WalletsService } from '../wallets';
-import { isEmpty } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 
 export class TransactionsService {
   constructor(
@@ -49,7 +49,11 @@ export class TransactionsService {
     if (transaction.wallet.userId !== user.id) {
       throw new TransactionDoesntBelongToUserError(dto.id);
     }
-    await this.transactionsRepo.update(dto.id, dto);
+    await this.transactionsRepo.update(dto.id, {
+      ...omit(dto, 'categoryId', 'walletId'),
+      category: await this.categoriesService.findCategoryById(user, dto.categoryId),
+      wallet: await this.walletsService.findWalletById(user, dto.walletId)
+    });
     return await this.transactionsRepo.findOneBy({ id: dto.id });
   }
 

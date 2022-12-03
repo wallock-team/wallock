@@ -4,10 +4,11 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Req,
 } from '@nestjs/common';
-import { CategoryCreateDto } from '@wallock/schemas';
+import { CategoryCreateDto, CategoryUpdateDto } from '@wallock/schemas';
 import { AuthRequest } from 'src/common/auth-request';
 import { CategoriesService } from './categories.service';
 
@@ -21,6 +22,14 @@ export class CategoriesController {
     @Body() dto: CategoryCreateDto,
   ) {
     return await this.categoriesService.createCategory(req.user, dto);
+  }
+
+  @Patch()
+  async updateCategory(
+    @Req() req: AuthRequest,
+    @Body() dto: CategoryUpdateDto
+  ) {
+    return await this.categoriesService.updateCategory(req.user, dto);
   }
 
   @Get()
