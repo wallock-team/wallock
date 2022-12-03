@@ -56,6 +56,11 @@ const Transactions: NextPage<Props> = function (props) {
     transactions: Transaction[];
   };
 
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'VND',
+  });
+
   // WARNING: QUANG PHAM'S DIRTY CODE, READ WITH CAUTION
 
   const transGroups: TransactionGroup[] = [];
@@ -82,7 +87,9 @@ const Transactions: NextPage<Props> = function (props) {
       <AppBar>
         <Container maxWidth="md">
           <Toolbar>
-            <Typography sx={{ flexGrow: 1 }}>{props.totalBalance}</Typography>
+            <Typography sx={{ flexGrow: 1 }}>
+              {formatter.format(props.totalBalance)}
+            </Typography>
             <Link href="/transactions/new">
               <Button variant="contained">New transaction</Button>
             </Link>
@@ -102,8 +109,8 @@ const Transactions: NextPage<Props> = function (props) {
                   />
                   <ListItemSecondaryAction>
                     {transaction.category.type === 'income'
-                      ? transaction.amount
-                      : -transaction.amount}
+                      ? formatter.format(transaction.amount)
+                      : formatter.format(-transaction.amount)}
                   </ListItemSecondaryAction>
                 </ListItem>
               ))}
