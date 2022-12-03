@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>Wallock</title>
         <link rel="icon" href="public/favicon/favicon.ico" />
       </Head>
-      <ToastContainer />
+      <ToastContainer position="bottom-left" />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <CssBaseline />
         <Component {...pageProps} />
